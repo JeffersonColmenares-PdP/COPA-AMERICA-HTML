@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copa América 2024</title>
+    <style>
+        body{
+            margin: 0px;
+        }
+
+        table {
+            width: 80%; 
+            border-collapse: collapse;
+            margin-left: 20px;
+        }
+        th, td {
+            border: 1px solid #000; 
+            padding: 8px;
+            text-align: center; 
+        }
+        th {
+            background-color: #97c7f6; 
+        }
+        input[type="number"] {
+            text-align: center; 
+            font-size: 20px; 
+        }
+        button {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            height: 30px;
+            background-color: rgb(90, 203, 234);
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; margin-left: 420px; position:absolute; color: white;">Enfrentamientos de la Copa América 2024</h1>
+    <img width="100%" height="500px" src="https://fcf.com.co/wp-content/uploads/2023/12/CA_BANNER.jpeg" alt="">
+    <button onclick="generarMarcadores()" style="display: block; margin: 0 auto; width: 250px; ">Generar Marcadores</button>
+    <div id="div-tabla"></div>
+    <br \>
+    <button style="display: block; margin: 0 auto; width: 350px; margin-bottom: 20px; " onclick="exportequiposGanadores()">Descargar Equipos Mejor Puntuación</button> 
+    
+
+    <script>
+        const copaAmerica2024 = {
+            year: 2024, 
+            host_country: "Estados Unidos", 
+            teams: [ 
+                { name: "Argentina", group: "A", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 },
+                { name: "Canada", group: "A", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 },
+                { name: "Chile", group: "A", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 },
+                { name: "Peru", group: "A", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 },
+                { name: "Ecuador", group: "B", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 },
+                { name: "Jamaica", group: "B", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 },
+                { name: "Mexico", group: "B", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 },
+                { name: "Venezuela", group: "B", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 },
+                { name: "Bolivia", group: "C", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 },
+                { name: "Panamá", group: "C", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 },
+                { name: "Uruguay", group: "C", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 },
+                { name: "Estados Unidos", group: "C", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 },
+                { name: "Brasil", group: "D", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 },
+                { name: "Colombia", group: "D", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 },
+                { name: "Costa Rica", group: "D", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 },
+                { name: "Paraguay", group: "D", games_played: 0, pro_goals: 0, ag_goal: 0, points: 0 }
+            ]
+        };
+
+        
+        function generarTabla(group) {
+            const teams = copaAmerica2024.teams.filter(team => team.group === group); 
+            let tablaHtml = `
+            <h2 style="margin-left: 20px">Grupo ${group}</h2>
+            <table>
+                <tr>
+                    <th>Equipo 1</th>
+                    <th>Equipo 2</th>
+                    <th>Marcador 1</th>
+                    <th>Marcador 2</th>
+                </tr>`; 
+
+            for (let i = 0; i < teams.length; i++) {
+                for (let j = i + 1; j < teams.length; j++) {
+                    tablaHtml += `
+                    <tr>
+                        <td>${teams[i].name}</td>
+                        <td>${teams[j].name}</td>
+                        <td><input type="number" id="gol-${teams[i].name}-${teams[j].name}-1" disabled></td>
+                        <td><input type="number" id="gol-${teams[i].name}-${teams[j].name}-2" disabled></td>
+                    </tr>`;
+                }
+            }
+            tablaHtml += '</table>'; 
+            return tablaHtml; 
+        }
+
+        function dibujarTabla() {
+            const divTabla = document.getElementById('div-tabla');
+            divTabla.innerHTML += generarTabla('A');
+            divTabla.innerHTML += generarTabla('B');
+            divTabla.innerHTML += generarTabla('C');
+            divTabla.innerHTML += generarTabla('D');
+        }
+
+        function marcadorAleatorio() {
+            return Math.floor(Math.random() * 4);
+        }
+
+        function generarMarcadores() {
+            
+            for (let i = 0; i < copaAmerica2024.teams.length; i++) {
+                for (let j = i + 1; j < copaAmerica2024.teams.length; j++) {
+                    if (copaAmerica2024.teams[i].group === copaAmerica2024.teams[j].group) { 
+                        const goles1 = marcadorAleatorio(); 
+                        const goles2 = marcadorAleatorio(); 
+
+                       
+                        document.getElementById(`gol-${copaAmerica2024.teams[i].name}-${copaAmerica2024.teams[j].name}-1`).value = goles1;
+                        document.getElementById(`gol-${copaAmerica2024.teams[i].name}-${copaAmerica2024.teams[j].name}-2`).value = goles2;
+
+                        copaAmerica2024.teams[i].games_played += 1;
+                        copaAmerica2024.teams[j].games_played += 1;
+
+                        copaAmerica2024.teams[i].pro_goals += goles1;
+                        copaAmerica2024.teams[i].ag_goal += goles2;
+
+                        copaAmerica2024.teams[j].pro_goals += goles2;
+                        copaAmerica2024.teams[j].ag_goal += goles1;
+
+                        
+                        if (goles1 > goles2) {
+                            copaAmerica2024.teams[i].points += 3;
+                        } else if (goles2 > goles1) {
+                            copaAmerica2024.teams[j].points += 3;
+                        } else {
+                            copaAmerica2024.teams[i].points += 1; 
+                            copaAmerica2024.teams[j].points += 1; 
+                        }
+                    }
+                }
+            }
+        }
+
+        function exportequiposGanadores() {
+            const equiposGanadores = {}; 
+
+            
+            copaAmerica2024.teams.forEach(team => {
+                
+                const equiposGrupo = copaAmerica2024.teams.filter(t => t.group === team.group);
+
+                equiposGrupo.sort((a, b) => {
+                    if (a.points !== b.points) {
+                        return b.points - a.points; 
+                    } else if (a.pro_goals !== b.pro_goals) {
+                        return b.pro_goals - a.pro_goals; 
+                    } else {
+                        return a.ag_goal - b.ag_goal;
+                    }
+                });
+                
+
+                equiposGanadores[team.group] = [equiposGrupo[0], equiposGrupo[1]];
+            });
+
+            const jsonContent = JSON.stringify(equiposGanadores, null, 2);
+
+            const downloadLink = document.createElement("a");
+            const blob = new Blob([jsonContent], { type: "text/plain" });
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = "equipos_ganadores.json";
+
+            downloadLink.click();
+        }
+
+        dibujarTabla();
+    </script>
+</body>
+</html>
